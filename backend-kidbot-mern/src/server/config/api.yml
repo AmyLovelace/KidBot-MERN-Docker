@@ -1,0 +1,145 @@
+openapi: 3.0.1
+info:
+  title: Kidbot Backend
+  description: Developed by Amy Lovelace
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      tags:
+        - User
+      summary: Find all users
+      description: Find all users
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/findResponse'
+        500:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    post:
+      tags:
+        - User
+      summary: Creates a new User
+      description: Creates a new User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUserRequest'
+        required: true
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdUserResponse'
+        500:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /users/{id}:
+    get:
+      tags:
+        - User
+      summary: Get User by ID
+      description: Get User by ID
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdUserResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    delete:
+      tags:
+        - User
+      summary: Delete User by id
+      description: Delete User by id
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted successfully
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+components:
+  schemas:
+    createUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: 'email@email.com'
+        username:
+          type: string
+          example: 'John'
+        password:
+          type: string
+          example: 'qwerty12345'
+    createdUserResponse:
+      type: object
+      properties:
+        email:
+          type: string
+          example: 'email@email.com'
+        username:
+          type: string
+          example: 'John'
+    findResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          email:
+            type: string
+            example: 'email@email.com'
+          username:
+            type: string
+            example: 'John'
+    errorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        requestCode:
+          type: string
+          example: 'asd-123-dsa'
+        timeStamp:
+          type: string
+          example: '1650983265992'
+
+
+

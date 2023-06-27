@@ -1,0 +1,49 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: ./frontend-kidbot-docker
+    container_name: frontend
+    image: amyluz/frontend
+    ports:
+      - 3001:3000
+    networks:
+      - kidbot-network
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://localhost:4001
+      - VITE_NODE_ENV=production
+    volumes:
+      - ./frontend-kidbot-docker:/usr/src/app
+      - /usr/src/app/node_modules/
+  backend:
+    build:
+      context: ./backend-kidbot-mern
+    container_name: backend
+    image: amyluz/backend
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/kidbot
+      - NODE_ENV=production
+    volumes:
+      - ./backend-kidbot-mern:/usr/src/app
+    ports:
+      - 4001:4000
+    depends_on:
+      - mongo
+    networks:
+      - kidbot-network
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo:latest
+    ports: 
+      - '27018:27017'
+    networks:
+      - kidbot-network
+networks:
+  kidbot-network:
+    driver: bridge
+    name: kidbot-network
+
+
